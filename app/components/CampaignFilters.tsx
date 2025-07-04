@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 interface FilterState {
   category: string;
   contentType: string;
@@ -10,17 +8,11 @@ interface FilterState {
 }
 
 interface CampaignFiltersProps {
+  filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
 }
 
-export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
-  const [filters, setFilters] = useState<FilterState>({
-    category: '',
-    contentType: '',
-    platform: '',
-    rewardRateSort: ''
-  });
-
+export function CampaignFilters({ filters, onFilterChange }: CampaignFiltersProps) {
   const types = [
     { value: '', label: 'All' },
     { value: 'clipping', label: 'Clipping' },
@@ -32,12 +24,11 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
   const rewardRateSorts = [
     { value: '', label: 'Default' },
     { value: 'highest', label: 'Highest CPM' },
-    { value: 'lowest', label: 'Lowest CPM' }
+    { value: 'budget', label: 'Highest Total Budget' }
   ];
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
     const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
     onFilterChange(newFilters);
   };
 
@@ -48,7 +39,6 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
       platform: '',
       rewardRateSort: ''
     };
-    setFilters(clearedFilters);
     onFilterChange(clearedFilters);
   };
 
