@@ -55,13 +55,13 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
   const activeFiltersCount = [filters.category, filters.rewardRateSort].filter(Boolean).length;
 
   return (
-    <div className="flex flex-wrap items-center gap-4 mb-8 mt-4">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium" style={{ color: '#e5e1df' }}>Type:</span>
+    <div className="flex flex-wrap items-center gap-4 mb-8 mt-4 animate-fadeInUp">
+      <div className="flex items-center gap-2 group">
+        <span className="text-sm font-medium transition-colors duration-300 group-hover:text-blue-300" style={{ color: '#e5e1df' }}>Type:</span>
         <select
           value={filters.category}
           onChange={(e) => handleFilterChange('category', e.target.value)}
-          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8"
+          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8 transition-all duration-300 hover:border-blue-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 cursor-pointer"
           style={{ 
             backgroundColor: '#191919', 
             color: '#e5e1df',
@@ -82,12 +82,12 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
 
       <div className="flex-1"></div>
 
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium" style={{ color: '#e5e1df' }}>Sort by:</span>
+      <div className="flex items-center gap-2 group">
+        <span className="text-sm font-medium transition-colors duration-300 group-hover:text-blue-300" style={{ color: '#e5e1df' }}>Sort by:</span>
         <select
           value={filters.rewardRateSort}
           onChange={(e) => handleFilterChange('rewardRateSort', e.target.value)}
-          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8"
+          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8 transition-all duration-300 hover:border-blue-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 cursor-pointer"
           style={{ 
             backgroundColor: '#191919', 
             color: '#e5e1df',
@@ -109,7 +109,7 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
       {activeFiltersCount > 0 && (
         <button
           onClick={clearFilters}
-          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="text-sm text-blue-400 hover:text-blue-300 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20 px-2 py-1 rounded-md hover:bg-blue-500/10"
         >
           Clear all
         </button>
