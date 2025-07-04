@@ -6,6 +6,7 @@ interface FilterState {
   category: string;
   contentType: string;
   platform: string;
+  rewardRateSort: string;
 }
 
 interface CampaignFiltersProps {
@@ -16,32 +17,22 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
   const [filters, setFilters] = useState<FilterState>({
     category: '',
     contentType: '',
-    platform: ''
+    platform: '',
+    rewardRateSort: ''
   });
 
-  const categories = [
-    { value: '', label: 'All Categories' },
-    { value: 'personal_brand', label: 'Personal Brand' },
-    { value: 'business', label: 'Business' },
-    { value: 'entertainment', label: 'Entertainment' },
-    { value: 'education', label: 'Education' },
-    { value: 'lifestyle', label: 'Lifestyle' }
+  const types = [
+    { value: '', label: 'All' },
+    { value: 'clipping', label: 'Clipping' },
+    { value: 'ugc', label: 'UGC' },
+    { value: 'audio', label: 'Audio' },
+    { value: 'other', label: 'Other' }
   ];
 
-  const contentTypes = [
-    { value: '', label: 'All Content Types' },
-    { value: 'post', label: 'Post' },
-    { value: 'story', label: 'Story' },
-    { value: 'reel', label: 'Reel' },
-    { value: 'video', label: 'Video' }
-  ];
-
-  const platforms = [
-    { value: '', label: 'All Platforms' },
-    { value: 'instagram', label: 'Instagram' },
-    { value: 'tiktok', label: 'TikTok' },
-    { value: 'youtube', label: 'YouTube' },
-    { value: 'x', label: 'X (Twitter)' }
+  const rewardRateSorts = [
+    { value: '', label: 'Default' },
+    { value: 'highest', label: 'Highest CPM' },
+    { value: 'lowest', label: 'Lowest CPM' }
   ];
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
@@ -54,73 +45,75 @@ export function CampaignFilters({ onFilterChange }: CampaignFiltersProps) {
     const clearedFilters = {
       category: '',
       contentType: '',
-      platform: ''
+      platform: '',
+      rewardRateSort: ''
     };
     setFilters(clearedFilters);
     onFilterChange(clearedFilters);
   };
 
-  const activeFiltersCount = [filters.category, filters.contentType, filters.platform].filter(Boolean).length;
+  const activeFiltersCount = [filters.category, filters.rewardRateSort].filter(Boolean).length;
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-      <div className="flex flex-wrap gap-4 items-center">
-        <h3 className="text-lg font-semibold text-white">Filters</h3>
-        
-        {/* Category Filter */}
+    <div className="flex flex-wrap items-center gap-4 mb-8 mt-4">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium" style={{ color: '#e5e1df' }}>Type:</span>
         <select
           value={filters.category}
           onChange={(e) => handleFilterChange('category', e.target.value)}
-          className="bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none"
+          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8"
+          style={{ 
+            backgroundColor: '#191919', 
+            color: '#e5e1df',
+            border: '1px solid #272727',
+            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23e5e1df' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+            backgroundPosition: 'right 8px center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '16px'
+          }}
         >
-          {categories.map((cat) => (
-            <option key={cat.value} value={cat.value}>
-              {cat.label}
-            </option>
-          ))}
-        </select>
-
-        {/* Content Type Filter */}
-        <select
-          value={filters.contentType}
-          onChange={(e) => handleFilterChange('contentType', e.target.value)}
-          className="bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none"
-        >
-          {contentTypes.map((type) => (
-            <option key={type.value} value={type.value}>
+          {types.map((type) => (
+            <option key={type.value} value={type.value} style={{ backgroundColor: '#191919', color: '#e5e1df' }}>
               {type.label}
             </option>
           ))}
         </select>
+      </div>
 
-        {/* Platform Filter */}
+      <div className="flex-1"></div>
+
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium" style={{ color: '#e5e1df' }}>Sort by:</span>
         <select
-          value={filters.platform}
-          onChange={(e) => handleFilterChange('platform', e.target.value)}
-          className="bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none"
+          value={filters.rewardRateSort}
+          onChange={(e) => handleFilterChange('rewardRateSort', e.target.value)}
+          className="bg-transparent border rounded-md px-3 py-2 text-sm focus:outline-none appearance-none pr-8"
+          style={{ 
+            backgroundColor: '#191919', 
+            color: '#e5e1df',
+            border: '1px solid #272727',
+            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23e5e1df' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+            backgroundPosition: 'right 8px center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '16px'
+          }}
         >
-          {platforms.map((platform) => (
-            <option key={platform.value} value={platform.value}>
-              {platform.label}
+          {rewardRateSorts.map((sort) => (
+            <option key={sort.value} value={sort.value} style={{ backgroundColor: '#191919', color: '#e5e1df' }}>
+              {sort.label}
             </option>
           ))}
         </select>
+      </div>
 
-        {/* Clear Filters Button */}
+      {activeFiltersCount > 0 && (
         <button
           onClick={clearFilters}
-          className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors"
+          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Clear Filters
+          Clear all
         </button>
-
-        {/* Active Filters Count */}
-        {activeFiltersCount > 0 && (
-          <span className="text-blue-400 text-sm">
-            {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''} active
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 } 

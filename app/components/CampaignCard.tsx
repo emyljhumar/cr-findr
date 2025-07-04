@@ -187,7 +187,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Campaign Title */}
       <div className="mb-4">
-        <h2 className="text-2xl font-bold" style={{ color: '#e5e1df' }}>{campaign.title}</h2>
+        <h2 className="text-2xl font-bold truncate" style={{ color: '#e5e1df' }}>{campaign.title}</h2>
       </div>
 
       {/* Budget Information */}
@@ -218,7 +218,18 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           <div>
             <span className="text-sm block mb-2" style={{ color: '#e5e1df' }}>Type</span>
             <div className="text-lg font-semibold capitalize" style={{ color: '#e5e1df' }}>
-              {campaign.category.replace('_', ' ')}
+              {(() => {
+                const categoryMap: { [key: string]: string } = {
+                  'personal_brand': 'Clipping',
+                  'entertainment': 'Clipping',
+                  'music': 'Audio',
+                  'products': 'UGC',
+                  'business': 'Business',
+                  'education': 'Education',
+                  'lifestyle': 'Lifestyle'
+                };
+                return categoryMap[campaign.category] || campaign.category.replace('_', ' ');
+              })()}
             </div>
           </div>
           <div>
