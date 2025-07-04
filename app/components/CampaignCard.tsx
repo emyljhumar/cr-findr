@@ -1,10 +1,13 @@
 import { ContentRewardsCampaign } from '@/lib/types';
+import { useState } from 'react';
 
 interface CampaignCardProps {
   campaign: ContentRewardsCampaign;
+  index?: number;
 }
 
-export function CampaignCard({ campaign }: CampaignCardProps) {
+export function CampaignCard({ campaign, index = 0 }: CampaignCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const progressPercentage = Math.round((campaign.totalPaid / campaign.totalBudget) * 100);
   
   // Format currency values
@@ -138,24 +141,35 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   return (
     <div 
-      className="rounded-xl p-6 cursor-pointer transition-all duration-200 hover:scale-[1.02] h-80 flex flex-col shadow-sm"
+      className="rounded-xl p-6 cursor-pointer h-80 flex flex-col shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
       style={{ 
         backgroundColor: '#191919', 
         border: '1px solid #272727', 
-        color: '#e5e1df' 
+        color: '#e5e1df',
+        animation: `fadeInUp 0.6s ease-out forwards ${index * 0.1}s`,
+        opacity: 0,
+        transform: 'translateY(20px)'
       }}
       onClick={handleCardClick}
       title={directLink ? `Click to visit ${campaign.title}` : 'Campaign details'}
     >
       {/* Header with image, title, and reward rate */}
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 rounded-lg flex items-center justify-center overflow-hidden">
+        <div className="w-16 h-16 rounded-lg flex items-center justify-center overflow-hidden relative">
           {campaignImage ? (
-            <img
-              src={campaignImage}
-              alt={campaign.title}
-              className="w-full h-full object-cover rounded-lg"
-            />
+            <>
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-lg animate-pulse" />
+              )}
+              <img
+                src={campaignImage}
+                alt={campaign.title}
+                className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={() => setImageLoaded(true)}
+              />
+            </>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <div className="w-8 h-8 bg-white/20 rounded"></div>
@@ -163,34 +177,26 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-xl font-bold truncate" style={{ color: '#e5e1df' }}>{experienceTitle}</h3>
+          <h3 className="text-xl font-bold truncate" style={{ color: '#e5e1df' }}>
+            {experienceTitle}
+          </h3>
         </div>
-        <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+        <div 
+          className="text-white px-1.5 py-0.5 rounded-md text-[0.95rem] font-semibold flex items-center"
+          style={{ backgroundColor: '#3b82f6' }}
+        >
           {formatCurrency(campaign.rewardRatePerThousandViews)} / 1K
-          {directLink && (
-            <svg 
-              className="w-3 h-3" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
-              />
-            </svg>
-          )}
         </div>
       </div>
 
       {/* Campaign Title */}
       <div className="mb-4">
-        <h2 className="text-2xl font-bold truncate" style={{ color: '#e5e1df' }}>{campaign.title}</h2>
+        <h2 className="text-2xl font-bold truncate" style={{ color: '#e5e1df' }}>
+          {campaign.title}
+        </h2>
       </div>
 
-      {/* Budget Information */}
+      {/* Budget Information with animated progress bar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
           <span className="text-lg font-bold" style={{ color: '#e5e1df' }}>
@@ -199,16 +205,20 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           <span className="text-lg font-bold" style={{ color: '#e5e1df' }}>{progressPercentage}%</span>
         </div>
         
-        {/* Progress Bar */}
+        {/* Enhanced Progress Bar */}
         <div className="w-full rounded-full h-3 overflow-hidden" style={{ backgroundColor: '#111111', border: '1px solid #272727' }}>
           <div 
-            className="h-full rounded-full transition-all duration-500 ease-out"
+            className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
             style={{ 
               width: `${Math.max(progressPercentage, 10)}%`,
               backgroundColor: '#f97316',
-              background: 'linear-gradient(90deg, #f97316 0%, #ea580c 100%)'
+              background: 'linear-gradient(90deg, #f97316 0%, #ea580c 100%)',
+              animationDelay: `${index * 0.2}s`
             }}
-          ></div>
+          >
+            {/* Animated shine effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine" />
+          </div>
         </div>
       </div>
 
@@ -241,9 +251,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                 return (
                   <div
                     key={index}
-                    className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                      platformInfo ? platformInfo.bg : ''
-                    }`}
+                    className="w-8 h-8 rounded-md flex items-center justify-center"
                     style={{ backgroundColor: platformInfo ? undefined : '#272727' }}
                   >
                     {platformInfo ? platformInfo.icon : (
