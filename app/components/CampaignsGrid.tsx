@@ -30,7 +30,8 @@ export function CampaignsGrid() {
     async function loadCampaigns() {
       try {
         setLoading(true);
-        const response = await fetch('/api/campaigns');
+        const sortParam = filters.rewardRateSort ? `?sortBy=${filters.rewardRateSort}` : '';
+        const response = await fetch(`/api/campaigns${sortParam}`);
         
         if (!response.ok) {
           const errorData = await response.json();
@@ -49,7 +50,7 @@ export function CampaignsGrid() {
     }
 
     loadCampaigns();
-  }, []);
+  }, [filters.rewardRateSort]); // Re-fetch when sort changes
 
   // Handle filter changes
   const handleFilterChange = (newFilters: FilterState) => {
@@ -79,13 +80,13 @@ export function CampaignsGrid() {
 
     return true;
   }).sort((a, b) => {
-    // Reward rate sorting
+    // Only handle client-side sorting for CPM rates
+    // Budget sorting is handled server-side in the API
     if (filters.rewardRateSort === 'highest') {
       return b.rewardRatePerThousandViews - a.rewardRatePerThousandViews;
-    } else if (filters.rewardRateSort === 'lowest') {
-      return a.rewardRatePerThousandViews - b.rewardRatePerThousandViews;
     }
-    return 0; // Default order
+    // For 'budget' and default, no client-side sorting needed (handled by API)
+    return 0;
   });
 
   // Calculate pagination
@@ -198,7 +199,7 @@ export function CampaignsGrid() {
       <div className="py-8 px-8">
         <div className="w-full">
           {/* Filters */}
-          <CampaignFilters onFilterChange={handleFilterChange} />
+          <CampaignFilters filters={filters} onFilterChange={handleFilterChange} />
           
           {/* Campaigns Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
