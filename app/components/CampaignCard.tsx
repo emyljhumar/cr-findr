@@ -223,7 +223,7 @@ export function CampaignCard({ campaign, index = 0 }: CampaignCardProps) {
       </div>
 
       {/* Bottom Section */}
-      <div className="flex justify-between items-end mt-auto">
+      <div className="flex justify-between items-start mt-auto">
         <div className="flex gap-6">
           <div>
             <span className="text-sm block mb-2" style={{ color: '#e5e1df' }}>Type</span>
@@ -244,7 +244,7 @@ export function CampaignCard({ campaign, index = 0 }: CampaignCardProps) {
           </div>
           <div>
             <span className="text-sm block mb-2" style={{ color: '#e5e1df' }}>Platforms</span>
-            <div className="flex gap-2 mt-1">
+            <div className="flex gap-1">
               {displayPlatforms.map((platform, index) => {
                 const platformKey = platform.toLowerCase();
                 const platformInfo = platformIcons[platformKey as keyof typeof platformIcons];
@@ -268,7 +268,7 @@ export function CampaignCard({ campaign, index = 0 }: CampaignCardProps) {
         
         <div className="text-right">
           <span className="text-sm block mb-2" style={{ color: '#e5e1df' }}>Views</span>
-          <div className="text-2xl font-bold" style={{ color: '#e5e1df' }}>{formatNumber(viewCount)}</div>
+          <div className="text-lg font-bold" style={{ color: '#e5e1df' }}>{formatNumber(viewCount)}</div>
         </div>
       </div>
     </div>
