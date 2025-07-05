@@ -13,6 +13,63 @@ interface FilterState {
   rewardRateSort: string;
 }
 
+// Custom hook for responsive items per page
+function useResponsiveItemsPerPage() {
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+
+  useEffect(() => {
+    // Check if window is available (client-side)
+    if (typeof window === 'undefined') {
+      console.log('Window not available, using default items per page');
+      return;
+    }
+
+    function updateItemsPerPage() {
+      const width = window.innerWidth;
+      let newItemsPerPage;
+      
+      // Adjust breakpoints based on actual grid behavior observed
+      if (width >= 1536) {
+        // 2xl: 5 columns - use multiple of 5
+        newItemsPerPage = 20; // 4 complete rows
+      } else if (width >= 1280) {
+        // xl: 4 columns - use multiple of 4  
+        newItemsPerPage = 20; // 5 complete rows
+      } else if (width >= 1024) {
+        // Wide screens showing 3 columns - use multiple of 3
+        newItemsPerPage = 21; // 7 complete rows
+      } else if (width >= 640) {
+        // Medium screens showing 2 columns - use multiple of 2
+        newItemsPerPage = 20; // 10 complete rows
+      } else {
+        // Mobile: 1 column - any number works
+        newItemsPerPage = 20;
+      }
+      
+      // Debug logging
+      console.log('Screen width:', width, '| Items per page:', newItemsPerPage);
+      
+      setItemsPerPage(newItemsPerPage);
+    }
+
+    // Set initial value
+    console.log('Setting up responsive items per page hook');
+    updateItemsPerPage();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', updateItemsPerPage);
+    console.log('Added resize event listener');
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('resize', updateItemsPerPage);
+      console.log('Removed resize event listener');
+    };
+  }, []);
+
+  return itemsPerPage;
+}
+
 export function CampaignsGrid() {
   const [campaigns, setCampaigns] = useState<ContentRewardsCampaign[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +81,14 @@ export function CampaignsGrid() {
     platform: '',
     rewardRateSort: ''
   });
-  const itemsPerPage = 20;
+  
+  // Use responsive items per page
+  const itemsPerPage = useResponsiveItemsPerPage();
+
+  // Debug: Track when itemsPerPage changes
+  useEffect(() => {
+    console.log('itemsPerPage changed to:', itemsPerPage);
+  }, [itemsPerPage]);
 
   useEffect(() => {
     async function loadCampaigns() {
@@ -51,6 +115,11 @@ export function CampaignsGrid() {
 
     loadCampaigns();
   }, [filters.rewardRateSort]); // Re-fetch when sort changes
+
+  // Reset to first page when itemsPerPage changes (responsive breakpoint change)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   // Handle filter changes
   const handleFilterChange = (newFilters: FilterState) => {
